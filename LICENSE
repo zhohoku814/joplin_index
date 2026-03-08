@@ -1,21 +1,82 @@
-Joplin Rich TOC Top License
+Joplin Index Source-Available Non-Commercial License v1.0
+Joplin Index 源码可见非商业许可证 v1.0
+
 Copyright (c) 2026 zhohoku814. All rights reserved.
+版权所有 (c) 2026 zhohoku814。保留一切权利。
 
-This repository is source-available, not open source.
+This license governs the source code, packaged plugin files, documentation, assets, and any other materials distributed in this repository or with this project (collectively, the “Software”).
+本许可证适用于本仓库或本项目随附发布的源代码、插件打包文件、文档、素材及其他相关材料（统称“软件”）。
 
-You may:
-1. View the source code in this repository.
-2. Download and use this software for personal, private, non-commercial purposes.
-3. Make private modifications for your own personal use.
+1. Nature of this license / 许可证性质
+This Software is source-available, not open source.
+You may view the source code, but no rights are granted except those expressly stated in this license.
+本软件为“源码可见”，并非“开源软件”。
+你可以查看源代码，但除本许可证明确授予的权利外，不授予任何其他权利。
 
-You may not, without prior written permission from the copyright holder:
-1. Use this software or any substantial portion of its source code for commercial purposes.
-2. Sell, sublicense, rent, host as a paid service, bundle into paid products, or otherwise monetize this software.
-3. Redistribute, republish, mirror, or re-upload this software, whether modified or unmodified.
-4. Copy substantial portions of the code, structure, UI, or implementation into another plugin, project, or product for public release.
-5. Create public forks, public derivative works, or publicly release modified versions.
-6. Remove or alter copyright, attribution, or license notices.
+2. Permitted use / 允许的使用
+Subject to your compliance with this license, you may:
+在遵守本许可证的前提下，你可以：
 
-For commercial licensing, redistribution, collaboration, or other exceptions, explicit written permission is required.
+2.1 Use the Software for personal, private, and non-commercial purposes.
+2.1 将本软件用于个人、私下、非商业目的。
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+2.2 Download, install, run, and privately evaluate the Software.
+2.2 下载、安装、运行并私下评估本软件。
+
+2.3 Make private modifications for your own personal, internal, non-commercial use, provided that such modifications are not distributed, published, or otherwise made available to third parties.
+2.3 为你自己的个人、内部、非商业使用进行私下修改，但该等修改不得向第三方分发、发布或以其他方式提供。
+
+3. Prohibited use / 禁止的使用
+Without prior written permission from the copyright holder, you may not:
+未经版权所有者事先书面许可，你不得：
+
+3.1 Use the Software, in whole or in part, for any commercial purpose.
+3.1 将本软件全部或部分用于任何商业目的。
+
+3.2 Sell, sublicense, lease, rent, host, bundle, integrate into paid products or services, offer as SaaS, or otherwise monetize the Software.
+3.2 出售、再许可、出租、租赁、托管、捆绑、集成到付费产品或服务、以 SaaS 形式提供，或以其他方式将本软件商业化。
+
+3.3 Redistribute, republish, mirror, re-upload, transmit, or otherwise make the Software available to any third party, whether modified or unmodified.
+3.3 无论是否修改，向任何第三方再分发、转载、镜像、重新上传、传播，或以其他方式提供本软件。
+
+3.4 Create, publish, distribute, or maintain public forks, public mirrors, or public derivative works of the Software.
+3.4 创建、发布、分发或维护本软件的公开 fork、公开镜像或公开衍生作品。
+
+3.5 Copy, adapt, port, or reuse substantial portions of the Software’s code, structure, UI, UX, logic, implementation, or bundled assets into another plugin, project, or product for public or commercial release.
+3.5 将本软件代码、结构、界面、交互、逻辑、实现或附带素材的实质性部分复制、改编、移植或复用于其他插件、项目或产品，并用于公开发布或商业发布。
+
+3.6 Remove, alter, obscure, or bypass copyright notices, attribution, license text, or author identification.
+3.6 删除、修改、遮盖或规避版权声明、署名信息、许可证文本或作者标识。
+
+3.7 Represent the Software or any derivative or imitation of it as your own original work in a way that is misleading or likely to cause confusion.
+3.7 以误导性方式将本软件或其衍生/仿制作品表述为你自己的原创作品，或造成混淆。
+
+4. No trademark or branding rights / 不授予商标与品牌权利
+No trademark, trade name, logo, brand identity, or publicity right is granted under this license.
+本许可证不授予任何商标、商号、标识、品牌形象或宣传权利。
+
+5. Ownership / 权利归属
+The Software is licensed, not sold. All rights not expressly granted are reserved by the copyright holder.
+本软件仅为许可使用，并非出售。凡未明确授予的权利，均由版权所有者保留。
+
+6. Requests for exceptions / 例外授权
+Commercial licensing, redistribution rights, collaboration rights, or any public-release exception require prior written permission from the copyright holder.
+如需商业授权、再分发权、合作授权或任何公开发布例外，必须事先取得版权所有者的书面许可。
+
+7. Termination / 终止
+Any breach of this license automatically terminates your rights under it.
+Upon termination, you must cease use of the Software and delete all copies in your possession or control, except to the extent retention is required by law.
+任何违反本许可证的行为都将自动终止你基于本许可证获得的权利。
+终止后，你必须停止使用本软件，并删除你持有或控制的全部副本，法律另有强制要求的除外。
+
+8. Disclaimer of warranty / 免责声明
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT.
+本软件按“现状”提供，不附带任何明示或默示保证，包括但不限于适销性、特定用途适用性、权属及不侵权保证。
+
+9. Limitation of liability / 责任限制
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY CLAIM, DAMAGES, LOSSES, OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OF THE SOFTWARE.
+在法律允许的最大范围内，无论基于合同、侵权或其他责任理论，版权所有者或贡献者均不对因本软件或其使用所引起、源于或与之相关的任何索赔、损害、损失或其他责任承担责任。
+
+10. Interpretation / 解释
+If any provision of this license is held unenforceable, the remaining provisions shall remain in effect to the maximum extent permitted by law.
+如果本许可证的任何条款被认定为不可执行，其余条款仍应在法律允许的最大范围内继续有效。

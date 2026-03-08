@@ -3,8 +3,8 @@
 	"id": "com.openclaw.richTocTop",
 	"app_min_version": "2.8",
 	"version": "1.2.0",
-	"name": "Rich TOC Top",
-	"description": "一键在当前笔记顶部生成或刷新目录，侧边目录支持滚动和层级过滤，兼容 Joplin 富文本编辑。",
+	"name": "Rich TOC Top / 顶部目录增强",
+	"description": "Generate or refresh a TOC at the top of the current note, with a scrollable and filterable sidebar outline / 在当前笔记顶部生成或刷新目录，并提供可滚动、可筛选层级的侧边目录。",
 	"author": "zhohoku814",
 	"homepage_url": "https://github.com/zhohoku814/joplin_index",
 	"repository_url": "https://github.com/zhohoku814/joplin_index",
@@ -21,6 +21,6 @@
 	"platforms": [
 		"desktop"
 	],
-	"_publish_hash": "sha256:51310ff0dfab0e648746afa86e1271a20d10ea0104ad181a5dadc3a741540634",
+	"_publish_hash": "sha256:b3a7b5c48997be83180a476084da98ac0b6e7c0e283bdf5ab8f105c753fe654f",
 	"_publish_commit": ""
 }
