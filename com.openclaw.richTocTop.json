@@ -1,0 +1,26 @@
+{
+	"manifest_version": 1,
+	"id": "com.openclaw.richTocTop",
+	"app_min_version": "2.8",
+	"version": "1.2.0",
+	"name": "Rich TOC Top",
+	"description": "一键在当前笔记顶部生成或刷新目录，侧边目录支持滚动和层级过滤，兼容 Joplin 富文本编辑。",
+	"author": "zhohoku814",
+	"homepage_url": "https://github.com/zhohoku814/joplin_index",
+	"repository_url": "https://github.com/zhohoku814/joplin_index",
+	"keywords": [
+		"toc",
+		"table of contents",
+		"outline",
+		"目录"
+	],
+	"categories": [
+		"editor",
+		"productivity"
+	],
+	"platforms": [
+		"desktop"
+	],
+	"_publish_hash": "sha256:51310ff0dfab0e648746afa86e1271a20d10ea0104ad181a5dadc3a741540634",
+	"_publish_commit": ""
+}
