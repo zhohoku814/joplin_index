@@ -83,16 +83,20 @@ npm run dist
 - `com.openclaw.richTocTop.jpl`：可直接安装的插件包 / Installable plugin package
 - `com.openclaw.richTocTop.json`：插件清单 / Plugin manifest metadata
 
-## 许可协议 License
+## 开源协议 Open Source License
 
-本项目**不是开源软件**，而是**源码可见（source-available）**项目。  
-This project is **not open source**. It is a **source-available** project.
+本项目现在采用 **GNU General Public License v3.0 or later（GPL-3.0-or-later）**。  
+This project is now licensed under the **GNU General Public License v3.0 or later (GPL-3.0-or-later)**.
 
-- 允许个人、私下、非商业使用  
-  Personal, private, non-commercial use is allowed.
-- 禁止未经许可的商业使用  
-  Commercial use without permission is prohibited.
-- 禁止未经许可的转载、分发、镜像、公开衍生发布  
-  Redistribution, mirroring, and public derivative release without permission are prohibited.
-- 详细条款见 [LICENSE](./LICENSE)  
-  See [LICENSE](./LICENSE) for the full terms.
+这意味着：  
+This means:
+
+- 允许使用、学习、修改与再分发  
+  You may use, study, modify, and redistribute it.
+- 允许商业使用  
+  Commercial use is allowed.
+- 如果你分发修改版，也必须继续以 GPL 方式开放对应源码  
+  If you distribute modified versions, you must also keep them under GPL and provide the corresponding source.
+
+详细条款见 [LICENSE](./LICENSE)。  
+See [LICENSE](./LICENSE) for the full license text.
