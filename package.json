@@ -1,6 +1,6 @@
 {
   "name": "joplin-plugin-rich-toc-top",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Generate or refresh a TOC at the top of the current Joplin note / 在当前 Joplin 笔记顶部生成或刷新目录，并提供支持滚动与层级过滤的侧边目录。",
   "author": "zhohoku814",
   "license": "GPL-3.0-or-later",

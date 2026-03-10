@@ -5,17 +5,127 @@ const uslug = require('@joplin/fork-uslug');
 
 const START_MARKER = '<!-- rich-toc-top:start -->';
 const END_MARKER = '<!-- rich-toc-top:end -->';
-const TOC_TITLE = '## 目录';
 const PANEL_ID = 'richTocTop.panel';
 const SETTINGS_SECTION = 'richTocTop';
 const SETTING_DISPLAY_MODE = 'displayMode';
+const SETTING_UI_LANGUAGE = 'uiLanguage';
 
 type DisplayMode = 'all' | 'top' | '12';
+type UiLanguageSetting = 'auto' | 'zh-CN' | 'en';
+type UiLocale = 'zh-CN' | 'en';
 
 interface HeaderItem {
 	level: number;
 	text: string;
 	slug: string;
+}
+
+const MESSAGES: Record<UiLocale, Record<string, string>> = {
+	'zh-CN': {
+		'markdown.tocTitle': '## 目录',
+		'panel.title': '目录',
+		'panel.currentNote': '当前笔记',
+		'panel.refreshTopToc': '刷新顶部目录',
+		'panel.filterTitle': '显示范围',
+		'panel.filter.topOnly': '只显示顶级目录',
+		'panel.filter.level12': '仅显示 1-2 级',
+		'panel.filter.showAll': '显示全部',
+		'panel.empty.noHeaders': '这篇笔记里还没有可用标题。',
+		'panel.empty.hint': '先在富文本里用“标题 1 / 标题 2 / 标题 3”，再点顶部目录按钮。',
+		'panel.empty.noFiltered': '当前筛选下没有匹配标题。',
+		'panel.empty.noFilteredHint': '现在是“{{mode}}”视图，可以点“显示全部”恢复。',
+		'panel.meta': '显示 {{shown}} / {{total}} 个标题 · {{mode}}',
+		'mode.top': '仅顶级目录',
+		'mode.12': '仅前 1-2 级',
+		'mode.all': '全部层级',
+		'toast.noSelectedNote': '没有选中的笔记',
+		'toast.noHeadersFound': '没找到标题。请先在富文本里用“标题 1/2/3”再生成目录。',
+		'toast.noItemsInFilter': '当前筛选“{{mode}}”下没有可生成的目录项',
+		'toast.generatedAll': '{{count}} 个标题',
+		'toast.generatedPartial': '{{shown}}/{{total}} 个标题（{{mode}}）',
+		'toast.generated': '顶部目录已生成：{{summary}}',
+		'toast.noGeneratedToc': '这篇笔记里没有插件生成的顶部目录',
+		'toast.removed': '已移除顶部目录',
+		'command.generate': '生成/刷新顶部目录',
+		'command.remove': '移除顶部目录',
+		'command.togglePanel': '显示/隐藏侧边目录',
+		'settings.sectionLabel': 'Rich TOC Top / 顶部目录增强',
+		'settings.displayModeLabel': '目录显示范围',
+		'settings.languageLabel': 'Language / 语言',
+		'settings.languageDescription': 'Auto follows Joplin locale. 自动跟随 Joplin 应用语言。',
+		'settings.language.auto': 'Auto / 自动',
+		'settings.language.zh-CN': '简体中文',
+		'settings.language.en': 'English',
+	},
+	en: {
+		'markdown.tocTitle': '## Table of Contents',
+		'panel.title': 'Outline',
+		'panel.currentNote': 'Current note',
+		'panel.refreshTopToc': 'Refresh top TOC',
+		'panel.filterTitle': 'Display range',
+		'panel.filter.topOnly': 'Top-level headings only',
+		'panel.filter.level12': 'Levels 1-2 only',
+		'panel.filter.showAll': 'Show all',
+		'panel.empty.noHeaders': 'No headings were found in this note yet.',
+		'panel.empty.hint': 'Use Heading 1 / Heading 2 / Heading 3 in rich-text mode, then click the top TOC button.',
+		'panel.empty.noFiltered': 'No headings match the current filter.',
+		'panel.empty.noFilteredHint': 'Current view: “{{mode}}”. Click “Show all” to restore.',
+		'panel.meta': 'Showing {{shown}} / {{total}} headings · {{mode}}',
+		'mode.top': 'Top-level only',
+		'mode.12': 'Levels 1-2 only',
+		'mode.all': 'All levels',
+		'toast.noSelectedNote': 'No note is selected',
+		'toast.noHeadersFound': 'No headings found. Please add Heading 1/2/3 first, then generate the TOC.',
+		'toast.noItemsInFilter': 'No TOC items can be generated under the “{{mode}}” filter',
+		'toast.generatedAll': '{{count}} headings',
+		'toast.generatedPartial': '{{shown}}/{{total}} headings ({{mode}})',
+		'toast.generated': 'Top TOC generated: {{summary}}',
+		'toast.noGeneratedToc': 'This note does not contain a plugin-generated top TOC',
+		'toast.removed': 'Top TOC removed',
+		'command.generate': 'Generate/Refresh Top TOC',
+		'command.remove': 'Remove Top TOC',
+		'command.togglePanel': 'Show/Hide Sidebar Outline',
+		'settings.sectionLabel': 'Rich TOC Top',
+		'settings.displayModeLabel': 'TOC display range',
+		'settings.languageLabel': 'Language / 语言',
+		'settings.languageDescription': 'Auto follows Joplin locale. 自动跟随 Joplin 应用语言。',
+		'settings.language.auto': 'Auto / 自动',
+		'settings.language.zh-CN': '简体中文',
+		'settings.language.en': 'English',
+	},
+};
+
+let uiLocale: UiLocale = 'zh-CN';
+let uiLanguageSetting: UiLanguageSetting = 'auto';
+
+function t(key: string, vars?: Record<string, any>): string {
+	const dict = MESSAGES[uiLocale] || MESSAGES['zh-CN'];
+	const fallback = MESSAGES['zh-CN'];
+	const template = dict[key] || fallback[key] || key;
+	return String(template).replace(/\{\{\s*([\w.-]+)\s*\}\}/g, (_m, varName) => {
+		if (!vars || !Object.prototype.hasOwnProperty.call(vars, varName)) return '';
+		return String(vars[varName]);
+	});
+}
+
+function resolveLocale(setting: UiLanguageSetting, detected: string): UiLocale {
+	if (setting === 'zh-CN' || setting === 'en') return setting;
+	return String(detected || '').toLowerCase().startsWith('zh') ? 'zh-CN' : 'en';
+}
+
+async function detectAppLocale(): Promise<string> {
+	try {
+		const locale = await joplin.settings.globalValue('locale');
+		if (locale) return String(locale);
+	} catch (_error) {
+		// Ignore and fallback.
+	}
+	return Intl.DateTimeFormat().resolvedOptions().locale || 'en';
+}
+
+async function reloadUi() {
+	uiLanguageSetting = (await joplin.settings.value(SETTING_UI_LANGUAGE) || 'auto') as UiLanguageSetting;
+	uiLocale = resolveLocale(uiLanguageSetting, await detectAppLocale());
 }
 
 function normaliseNewlines(text: string): string {
@@ -50,6 +160,14 @@ function cleanHeaderText(text: string): string {
 		.trim();
 }
 
+function isGeneratedTocHeading(text: string): boolean {
+	const normalized = String(text || '').trim().toLowerCase();
+	if (!normalized) return false;
+	if (normalized === '目录') return true;
+	if (normalized === 'table of contents') return true;
+	return false;
+}
+
 function extractHeaders(noteBody: string): HeaderItem[] {
 	const body = normaliseNewlines(noteBody);
 	const lines = body.split('\n');
@@ -68,7 +186,7 @@ function extractHeaders(noteBody: string): HeaderItem[] {
 		if (!match) continue;
 
 		const text = cleanHeaderText(match[2].trim());
-		if (!text || text === '目录') continue;
+		if (!text || isGeneratedTocHeading(text)) continue;
 
 		const baseSlug = uslug(text);
 		if (!baseSlug) continue;
@@ -110,11 +228,11 @@ function filterHeaders(headers: HeaderItem[], displayMode: DisplayMode): HeaderI
 function displayModeLabel(displayMode: DisplayMode): string {
 	switch (displayMode) {
 		case 'top':
-			return '仅顶级目录';
+			return t('mode.top');
 		case '12':
-			return '仅前 1-2 级';
+			return t('mode.12');
 		default:
-			return '全部层级';
+			return t('mode.all');
 	}
 }
 
@@ -125,22 +243,22 @@ function buildTocMarkdown(headers: HeaderItem[]): string {
 		return `${indent}- [${header.text}](#${header.slug})`;
 	});
 
-	return [START_MARKER, TOC_TITLE, '', ...lines, '', END_MARKER, ''].join('\n');
+	return [START_MARKER, t('markdown.tocTitle'), '', ...lines, '', END_MARKER, ''].join('\n');
 }
 
 function buildFilterControlsHtml(displayMode: DisplayMode): string {
 	return `
 		<div class="filter-group">
-			<div class="filter-title">显示范围</div>
+			<div class="filter-title">${escapeHtml(t('panel.filterTitle'))}</div>
 			<label class="filter-option">
 				<input type="checkbox" data-display-mode="top" ${displayMode === 'top' ? 'checked' : ''} />
-				<span>只显示顶级目录</span>
+				<span>${escapeHtml(t('panel.filter.topOnly'))}</span>
 			</label>
 			<label class="filter-option">
 				<input type="checkbox" data-display-mode="12" ${displayMode === '12' ? 'checked' : ''} />
-				<span>仅显示 1-2 级</span>
+				<span>${escapeHtml(t('panel.filter.level12'))}</span>
 			</label>
-			<button class="filter-reset-btn" data-action="setDisplayModeAll" ${displayMode === 'all' ? 'disabled' : ''}>显示全部</button>
+			<button class="filter-reset-btn" data-action="setDisplayModeAll" ${displayMode === 'all' ? 'disabled' : ''}>${escapeHtml(t('panel.filter.showAll'))}</button>
 		</div>
 	`;
 }
@@ -154,15 +272,15 @@ function buildPanelHtml(noteTitle: string, headers: HeaderItem[], displayMode: D
 	if (!headers.length) {
 		contentHtml = `
 			<div class="empty-state">
-				<p>这篇笔记里还没有可用标题。</p>
-				<p class="hint">先在富文本里用“标题 1 / 标题 2 / 标题 3”，再点顶部目录按钮。</p>
+				<p>${escapeHtml(t('panel.empty.noHeaders'))}</p>
+				<p class="hint">${escapeHtml(t('panel.empty.hint'))}</p>
 			</div>
 		`;
 	} else if (!filteredHeaders.length) {
 		contentHtml = `
 			<div class="empty-state">
-				<p>当前筛选下没有匹配标题。</p>
-				<p class="hint">现在是“${escapeHtml(displayModeLabel(displayMode))}”视图，可以点“显示全部”恢复。</p>
+				<p>${escapeHtml(t('panel.empty.noFiltered'))}</p>
+				<p class="hint">${escapeHtml(t('panel.empty.noFilteredHint', { mode: displayModeLabel(displayMode) }))}</p>
 			</div>
 		`;
 	} else {
@@ -177,7 +295,7 @@ function buildPanelHtml(noteTitle: string, headers: HeaderItem[], displayMode: D
 		});
 
 		contentHtml = `
-			<div class="toc-meta">显示 ${filteredHeaders.length} / ${headers.length} 个标题 · ${escapeHtml(displayModeLabel(displayMode))}</div>
+			<div class="toc-meta">${escapeHtml(t('panel.meta', { shown: filteredHeaders.length, total: headers.length, mode: displayModeLabel(displayMode) }))}</div>
 			<div class="toc-list">
 				${items.join('\n')}
 			</div>
@@ -187,11 +305,11 @@ function buildPanelHtml(noteTitle: string, headers: HeaderItem[], displayMode: D
 	return `
 		<div class="container">
 			<div class="panel-header">
-				<div class="panel-title">目录</div>
-				<div class="panel-note-title" title="${escapeHtml(noteTitle || '')}">${escapeHtml(noteTitle || '当前笔记')}</div>
+				<div class="panel-title">${escapeHtml(t('panel.title'))}</div>
+				<div class="panel-note-title" title="${escapeHtml(noteTitle || '')}">${escapeHtml(noteTitle || t('panel.currentNote'))}</div>
 			</div>
 			<div class="panel-actions">
-				<button class="action-btn" data-action="generateTopToc">刷新顶部目录</button>
+				<button class="action-btn" data-action="generateTopToc">${escapeHtml(t('panel.refreshTopToc'))}</button>
 				${filterControls}
 			</div>
 			<div class="panel-content">
@@ -220,7 +338,7 @@ async function setDisplayMode(displayMode: DisplayMode) {
 async function generateTocAtTop() {
 	const note = await joplin.workspace.selectedNote();
 	if (!note) {
-		await showToast('没有选中的笔记');
+		await showToast(t('toast.noSelectedNote'));
 		return false;
 	}
 
@@ -229,14 +347,14 @@ async function generateTocAtTop() {
 	const headers = extractHeaders(bodyWithoutOldToc);
 
 	if (!headers.length) {
-		await showToast('没找到标题。请先在富文本里用“标题 1/2/3”再生成目录。');
+		await showToast(t('toast.noHeadersFound'));
 		return false;
 	}
 
 	const displayMode = await getDisplayMode();
 	const filteredHeaders = filterHeaders(headers, displayMode);
 	if (!filteredHeaders.length) {
-		await showToast(`当前筛选“${displayModeLabel(displayMode)}”下没有可生成的目录项`);
+		await showToast(t('toast.noItemsInFilter', { mode: displayModeLabel(displayMode) }));
 		return false;
 	}
 
@@ -245,35 +363,37 @@ async function generateTocAtTop() {
 
 	await joplin.data.put(['notes', note.id], null, { body: nextBody });
 	const summary = filteredHeaders.length === headers.length
-		? `${filteredHeaders.length} 个标题`
-		: `${filteredHeaders.length}/${headers.length} 个标题（${displayModeLabel(displayMode)}）`;
-	await showToast(`顶部目录已生成：${summary}`);
+		? t('toast.generatedAll', { count: filteredHeaders.length })
+		: t('toast.generatedPartial', { shown: filteredHeaders.length, total: headers.length, mode: displayModeLabel(displayMode) });
+	await showToast(t('toast.generated', { summary }));
 	return true;
 }
 
 async function removeGeneratedToc() {
 	const note = await joplin.workspace.selectedNote();
 	if (!note) {
-		await showToast('没有选中的笔记');
+		await showToast(t('toast.noSelectedNote'));
 		return false;
 	}
 
 	const body = normaliseNewlines(note.body || '');
 	const nextBody = stripGeneratedToc(body);
 	if (nextBody === body) {
-		await showToast('这篇笔记里没有插件生成的顶部目录');
+		await showToast(t('toast.noGeneratedToc'));
 		return false;
 	}
 
 	await joplin.data.put(['notes', note.id], null, { body: nextBody });
-	await showToast('已移除顶部目录');
+	await showToast(t('toast.removed'));
 	return true;
 }
 
 joplin.plugins.register({
 	onStart: async function() {
+		uiLocale = resolveLocale('auto', await detectAppLocale());
+
 		await joplin.settings.registerSection(SETTINGS_SECTION, {
-			label: 'Rich TOC Top',
+			label: t('settings.sectionLabel'),
 			iconName: 'fas fa-list-ul',
 		});
 
@@ -281,11 +401,27 @@ joplin.plugins.register({
 			[SETTING_DISPLAY_MODE]: {
 				value: 'all',
 				type: SettingItemType.String,
-				label: '目录显示范围',
+				label: t('settings.displayModeLabel'),
 				public: false,
 				section: SETTINGS_SECTION,
 			},
+			[SETTING_UI_LANGUAGE]: {
+				value: 'auto',
+				type: SettingItemType.String,
+				public: true,
+				isEnum: true,
+				section: SETTINGS_SECTION,
+				label: t('settings.languageLabel'),
+				description: t('settings.languageDescription'),
+				options: {
+					auto: t('settings.language.auto'),
+					'zh-CN': t('settings.language.zh-CN'),
+					en: t('settings.language.en'),
+				},
+			},
 		});
+
+		await reloadUi();
 
 		const panel = await joplin.views.panels.create(PANEL_ID);
 		await joplin.views.panels.addScript(panel, './webview.css');
@@ -295,13 +431,13 @@ joplin.plugins.register({
 			const displayMode = await getDisplayMode();
 			const note = await joplin.workspace.selectedNote();
 			if (!note) {
-				await joplin.views.panels.setHtml(panel, buildPanelHtml('当前笔记', [], displayMode));
+				await joplin.views.panels.setHtml(panel, buildPanelHtml(t('panel.currentNote'), [], displayMode));
 				return;
 			}
 
 			const bodyWithoutOldToc = stripGeneratedToc(note.body || '');
 			const headers = extractHeaders(bodyWithoutOldToc);
-			await joplin.views.panels.setHtml(panel, buildPanelHtml(note.title || '当前笔记', headers, displayMode));
+			await joplin.views.panels.setHtml(panel, buildPanelHtml(note.title || t('panel.currentNote'), headers, displayMode));
 		};
 
 		await joplin.views.panels.onMessage(panel, async (message: any) => {
@@ -324,7 +460,7 @@ joplin.plugins.register({
 
 		await joplin.commands.register({
 			name: 'richTocTop.generate',
-			label: '生成/刷新顶部目录',
+			label: t('command.generate'),
 			iconName: 'fas fa-list-ul',
 			execute: async () => {
 				await generateTocAtTop();
@@ -334,7 +470,7 @@ joplin.plugins.register({
 
 		await joplin.commands.register({
 			name: 'richTocTop.remove',
-			label: '移除顶部目录',
+			label: t('command.remove'),
 			iconName: 'fas fa-list-alt',
 			execute: async () => {
 				await removeGeneratedToc();
@@ -344,7 +480,7 @@ joplin.plugins.register({
 
 		await joplin.commands.register({
 			name: 'richTocTop.togglePanel',
-			label: '显示/隐藏侧边目录',
+			label: t('command.togglePanel'),
 			iconName: 'fas fa-map-signs',
 			execute: async () => {
 				const isVisible = await joplin.views.panels.visible(panel);
@@ -367,6 +503,7 @@ joplin.plugins.register({
 		});
 
 		await joplin.settings.onChange(async () => {
+			await reloadUi();
 			await updatePanel();
 		});
 
